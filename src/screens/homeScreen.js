@@ -76,11 +76,154 @@ const homeScreen = ({ navigation }) => {
         <Text style={[styles.textMedium34, { textAlign: 'center', color: '#FFFFFF' }]}>
           ภาษาอังกฤษ
         </Text>
-        <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
-          <FlatGrid
+        <View
+          style={{
+            margin: 10,
+            flex: 2,
+          }}>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <TouchableOpacity onPress={() => gradeHandler(1)}
+              style={{
+                flex: 1,
+                borderRadius: 8,
+                padding: 10,
+                margin: 5,
+                backgroundColor: '#028c6a',
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={[
+                  styles.textBold26,
+                  {
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    color: '#fff',
+                    fontWeight: '600',
+                  },
+                ]}>
+                ป.1
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => gradeHandler(35)}
+              style={{
+                flex: 1,
+                borderRadius: 8,
+                padding: 10,
+                margin: 5,
+                backgroundColor: '#28b786',
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={[
+                  styles.textBold26,
+                  {
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    color: '#fff',
+                    fontWeight: '600',
+                  },
+                ]}>
+                ป.2
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <TouchableOpacity onPress={() => gradeHandler(36)}
+              style={{
+                flex: 1,
+                borderRadius: 8,
+                padding: 10,
+                margin: 5,
+                backgroundColor: '#FFA73F',
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={[
+                  styles.textBold26,
+                  {
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    color: '#fff',
+                    fontWeight: '600',
+                  },
+                ]}>
+                ป.3
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => gradeHandler(37)}
+              style={{
+                flex: 1,
+                borderRadius: 8,
+                padding: 10,
+                margin: 5,
+                backgroundColor: '#2E59F1',
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={[
+                  styles.textBold26,
+                  {
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    color: '#fff',
+                    fontWeight: '600',
+                  },
+                ]}>
+                ป.4
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <TouchableOpacity
+            onPress={() => gradeHandler(38)}
+              style={{
+                flex: 1,
+                borderRadius: 8,
+                padding: 10,
+                margin: 5,
+                backgroundColor: '#ec6161',
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={[
+                  styles.textBold26,
+                  {
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    color: '#fff',
+                    fontWeight: '600',
+                  },
+                ]}>
+                ป.5
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => gradeHandler(39)}
+              style={{
+                flex: 1,
+                borderRadius: 8,
+                padding: 10,
+                margin: 5,
+                backgroundColor: '#B13AFA',
+                justifyContent: 'center',
+              }}>
+              <Text
+                style={[
+                  styles.textBold26,
+                  {
+                    textAlign: 'center',
+                    textAlignVertical: 'center',
+                    color: '#fff',
+                    fontWeight: '600',
+                  },
+                ]}>
+                ป.6
+              </Text>
+            </TouchableOpacity>
+          </View>         
+          {/*  <FlatGrid
             itemDimension={120}
-            staticDimension={340}
-            data={items}
+            maxDimension={1000}
+            data={items}           
             style={{ marginTop: 5, flex: 1 }}
             spacing={10}
             renderItem={({ item }) => (
@@ -104,6 +247,7 @@ const homeScreen = ({ navigation }) => {
               </TouchableOpacity>
             )}
           />
+          */}
         </View>
         <Text style={[styles.textBold18, { flex: 0.4, textAlign: 'center', color: '#FFFFFF' }]}>
           กลับมาหน้าหลักนี้โดยการกดรูปบ้าน {'\n'}
