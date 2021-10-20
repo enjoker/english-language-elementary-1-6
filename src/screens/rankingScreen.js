@@ -232,7 +232,8 @@ const rankingScreen = ({ navigation, route }) => {
                     onPress={() => navigation.navigate('optionTest', {
                       subid: csgId,
                       gradeid: gradeId,
-                      csgName: csgName
+                      csgName: csgName,
+                      from: 'scoreScreen'
                     })}>
                     <Text
                       style={[
