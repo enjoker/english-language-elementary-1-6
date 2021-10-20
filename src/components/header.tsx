@@ -14,7 +14,6 @@ interface headerOptions {
 }
 
 const Header = ({ homeScreen }: headerOptions) => {
-  console.log(homeScreen)
   return (
     <View style={pageStyle.headerBar}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
