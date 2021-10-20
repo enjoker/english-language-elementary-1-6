@@ -29,7 +29,8 @@ const optionTestScreen = ({ navigation, route }) => {
   const [gradeName, setgradeName] = useState('');
   const [showLevel, setshowLevel] = useState(true);
   const dispatch = useDispatch();
-  from === 'scoreScreen' ?
+
+  from === 'scoreScreen' || from === 'rankingScreen' ? // clear stack ถ้ามาจากหน้า score หรือ ranking
     navigation.reset({
       index: 1,
       routes: [
@@ -44,7 +45,7 @@ const optionTestScreen = ({ navigation, route }) => {
         }],
     })
     : null
-    
+
   useEffect(() => { }, []);
 
   const ContainerContent = () => {
