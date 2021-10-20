@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,29 +13,47 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import styles from '../styles/style';
-import {Image, Icon, Avatar, normalize, Card} from 'react-native-elements';
-import {useDispatch, useSelector} from 'react-redux';
+import { Image, Icon, Avatar, normalize, Card } from 'react-native-elements';
+import { useDispatch, useSelector } from 'react-redux';
 
 import * as levelTestActions from '../store/actions/levelTest';
 
-const optionTestScreen = ({navigation, route}) => {
-  const {subid, gradeid, csgName} = route.params;
+const optionTestScreen = ({ navigation, route }) => {
+  const subid = route.params.subid;
+  const gradeid = route.params.gradeid;
+  const csgName = route.params.csgName;
+  const from = route.params.from;
   const [questionSelected, setquestionSelected] = useState(0);
   const [levelSelected, setlevelSelected] = useState(0);
   const [timeOut, settimeOut] = useState('-');
   const [gradeName, setgradeName] = useState('');
   const [showLevel, setshowLevel] = useState(true);
-
   const dispatch = useDispatch();
-  useEffect(() => {}, []);
+  from === 'scoreScreen' ?
+    navigation.reset({
+      index: 1,
+      routes: [
+        { name: 'home' },
+        {
+          name: 'optionTest',
+          params: {
+            subid: subid,
+            gradeid: gradeid,
+            csgName: csgName,
+          },
+        }],
+    })
+    : null
+    
+  useEffect(() => { }, []);
 
   const ContainerContent = () => {
     const optionTestHandler = async () => {
       let action;
       if (questionSelected == 0) {
-        Alert.alert('แจ้งเตือน', 'กรุณาเลือกจำนวนข้อ', [{text: 'ยืนยัน'}]);
+        Alert.alert('แจ้งเตือน', 'กรุณาเลือกจำนวนข้อ', [{ text: 'ยืนยัน' }]);
       } else if (levelSelected == 0 && showLevel == true) {
-        Alert.alert('แจ้งเตือน', 'กรุณาเลือกระดับความยาก', [{text: 'ยืนยัน'}]);
+        Alert.alert('แจ้งเตือน', 'กรุณาเลือกระดับความยาก', [{ text: 'ยืนยัน' }]);
       } else {
         action = levelTestActions.getLevel(
           '1',
@@ -133,23 +151,23 @@ const optionTestScreen = ({navigation, route}) => {
       }
     }, [csgName]);
     return (
-      <View style={{flex: 1, justifyContent: 'flex-start'}}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text
             numberOfLines={1}
-            style={[styles.textMedium20, {flex: 1, color: '#FFFFFF'}]}>
-            {csgName}            
+            style={[styles.textMedium20, { flex: 1, color: '#FFFFFF' }]}>
+            {csgName}
           </Text>
           <Text
             style={[
               styles.textMedium20,
-              {textAlign: 'center', color: '#FFFFFF'},
+              { textAlign: 'center', color: '#FFFFFF' },
             ]}>
             {gradeName}
           </Text>
         </View>
         <View style={pageStyle.optionHeading}>
-          <Text style={[styles.textMedium20, {textAlign: 'center'}]}>
+          <Text style={[styles.textMedium20, { textAlign: 'center' }]}>
             เลือกจำนวนข้อ
           </Text>
           <View style={pageStyle.optionSection}>
@@ -193,7 +211,7 @@ const optionTestScreen = ({navigation, route}) => {
         </View>
         {showLevel ? (
           <View style={pageStyle.optionHeading}>
-            <Text style={[styles.textMedium20, {textAlign: 'center'}]}>
+            <Text style={[styles.textMedium20, { textAlign: 'center' }]}>
               เลือกระดับ
             </Text>
             <View style={pageStyle.optionSection}>
@@ -247,7 +265,7 @@ const optionTestScreen = ({navigation, route}) => {
           <Text
             style={[
               styles.textRegular16,
-              {textAlignVertical: 'center', marginHorizontal: 5, color: '#fff'},
+              { textAlignVertical: 'center', marginHorizontal: 5, color: '#fff' },
             ]}>
             มีเวลาทำโดยประมาณ
           </Text>
@@ -272,13 +290,13 @@ const optionTestScreen = ({navigation, route}) => {
           <Text
             style={[
               styles.textRegular16,
-              {textAlignVertical: 'center', marginHorizontal: 5, color: '#fff'},
+              { textAlignVertical: 'center', marginHorizontal: 5, color: '#fff' },
             ]}>
             นาที
           </Text>
         </View>
         <TouchableOpacity
-          style={{alignItems: 'center', marginTop: 10}}
+          style={{ alignItems: 'center', marginTop: 10 }}
           onPress={optionTestHandler}>
           <View
             style={{
@@ -302,7 +320,7 @@ const optionTestScreen = ({navigation, route}) => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{alignItems: 'flex-start', marginTop: 10}}
+          style={{ alignItems: 'flex-start', marginTop: 10 }}
           onPress={() => navigation.navigate('type')}>
           <View
             style={{
@@ -316,9 +334,9 @@ const optionTestScreen = ({navigation, route}) => {
             }}>
             <Image
               source={require('../assets/images/icons/previous.png')}
-              style={{width: 15, height: 15}}
+              style={{ width: 15, height: 15 }}
             />
-            <Text style={[styles.textMedium16, {marginHorizontal: 5}]}>
+            <Text style={[styles.textMedium16, { marginHorizontal: 5 }]}>
               ย้อนกลับ
             </Text>
           </View>
@@ -327,9 +345,9 @@ const optionTestScreen = ({navigation, route}) => {
     );
   };
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <ImageBackground
-        style={{flex: 1}}
+        style={{ flex: 1 }}
         source={require('../assets/images/bg.jpg')}>
         <View
           style={{
@@ -338,7 +356,7 @@ const optionTestScreen = ({navigation, route}) => {
             marginBottom: 10,
             flex: 1,
           }}>
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             <ContainerContent />
           </View>
         </View>
