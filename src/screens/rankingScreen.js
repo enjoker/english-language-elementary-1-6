@@ -233,7 +233,7 @@ const rankingScreen = ({ navigation, route }) => {
                       subid: csgId,
                       gradeid: gradeId,
                       csgName: csgName,
-                      from: 'scoreScreen'
+                      from: 'rankingScreen'
                     })}>
                     <Text
                       style={[
