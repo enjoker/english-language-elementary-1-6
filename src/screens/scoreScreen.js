@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -14,13 +14,13 @@ import {
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import styles from '../styles/style';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Modal from 'react-native-modal';
 
 // import Actions
 import * as scoreActions from '../store/actions/score';
 
-const scoreScreen = ({ navigation, route }) => {
+const scoreScreen = ({navigation, route}) => {
   const dispatch = useDispatch();
   const allQuestions = useSelector(state => state.level.showQuestions);
   const {
@@ -37,7 +37,7 @@ const scoreScreen = ({ navigation, route }) => {
   } = route.params;
   const timeUsed = timeOut - timeLeft + overTimePlus;
   const timePlus = timeLeft - overTimePlus;
-  const { width } = Dimensions.get('window');
+  const {width} = Dimensions.get('window');
   const [selectedQuestion, setselectedQuestion] = useState(false);
   const [ModalVisible, setmodalVisible] = useState(false);
   const [sendScoreStatus, setsendScoreStatus] = useState(false);
@@ -54,16 +54,16 @@ const scoreScreen = ({ navigation, route }) => {
   choiceSelected.sort((a, b) => (a.questionId > b.questionId ? 1 : -1));
   allQuestions
     ? allQuestions.map((item, index) => {
-      if (item.examAnswer[0].c1 === choiceSelected[index].choiceValue) {
-        correctAnswerCount += 1;
-      } else if (choiceSelected[index].choiceValue !== 'หมดเวลา') {
-        wrongAnswerCount += 1;
-      }
-    })
+        if (item.examAnswer[0].c1 === choiceSelected[index].choiceValue) {
+          correctAnswerCount += 1;
+        } else if (choiceSelected[index].choiceValue !== 'หมดเวลา') {
+          wrongAnswerCount += 1;
+        }
+      })
     : null;
 
   const toggleModal = (index, answerResult) => {
-    setselectedQuestion({ index, answerResult });
+    setselectedQuestion({index, answerResult});
     setmodalVisible(!ModalVisible);
   };
 
@@ -71,22 +71,19 @@ const scoreScreen = ({ navigation, route }) => {
     let rankingScore = 0;
     const levelBonus =
       level === 1 ? 1 : level === 3 ? 1.1 : level === 4 ? 1.2 : null;
-    if (
-      correctAnswerCount >= (questionCount * 80) / 100 &&
-      overTimePlus == 0
-    ) {
+    if (correctAnswerCount >= (questionCount * 80) / 100 && overTimePlus == 0) {
       rankingScore =
         Math.round(
           (Math.round(correctAnswerCount * levelBonus * 1000) / 1000 +
             (timeLeft - overTimePlus) / 100) *
-          1000,
+            1000,
         ) / 1000;
     } else {
       rankingScore =
         Math.round(
           (Math.round(correctAnswerCount * levelBonus * 1000) / 1000 -
             overTimePlus / 100) *
-          1000,
+            1000,
         ) / 1000;
     }
     /*if (timeLeft > 299) {
@@ -130,9 +127,12 @@ const scoreScreen = ({ navigation, route }) => {
       csgName == 'สอบปลายภาคเรียน' ||
       csgName == 'สอบปลายภาคเรียนที่ 1' ||
       csgName == 'สอบปลายภาคเรียนที่ 2' ||
-      csgName == 'ภาษาไทย-สอบปลายภาคเรียน' ||
-      csgName == 'ภาษาไทย-สอบปลายภาคเรียนที่ 1' ||
-      csgName == 'ภาษาไทย-สอบปลายภาคเรียนที่ 2'
+      csgName == 'ภาษาอังกฤษ-สอบปลายภาคเรียน' ||
+      csgName == 'ภาษาอังกฤษ-สอบปลายภาคเรียนที่ 1' ||
+      csgName == 'ภาษาอังกฤษ-สอบปลายภาคเรียนที่ 2' ||
+      csgName == 'ภาษาต่างประเทศ-สอบปลายภาคเรียน' ||
+      csgName == 'ภาษาต่างประเทศ-สอบปลายภาคเรียนที่ 1' ||
+      csgName == 'ภาษาต่างประเทศ-สอบปลายภาคเรียนที่ 2'
     ) {
       setshowLevel(false);
     }
@@ -156,7 +156,7 @@ const scoreScreen = ({ navigation, route }) => {
         Math.round(
           (Math.round(correctAnswerCount * scoreLevel * 1000) / 1000 +
             (timeLeft - overTimePlus) / 100) *
-          1000,
+            1000,
         ) / 1000,
       );
     } else {
@@ -164,7 +164,7 @@ const scoreScreen = ({ navigation, route }) => {
         Math.round(
           (Math.round(correctAnswerCount * scoreLevel * 1000) / 1000 -
             overTimePlus / 100) *
-          1000,
+            1000,
         ) / 1000,
       );
     }
@@ -174,27 +174,27 @@ const scoreScreen = ({ navigation, route }) => {
     const answerResult = selectedQuestion.answerResult;
     const answerIndex = selectedQuestion.index;
     return (
-      <View style={{ flex: 1, justifyContent: 'center' }}>
+      <View style={{flex: 1, justifyContent: 'center'}}>
         <View
           style={[
             styles.boxETC,
             answerResult
-              ? { backgroundColor: '#63EF71' }
-              : { backgroundColor: '#FFD84E' },
+              ? {backgroundColor: '#63EF71'}
+              : {backgroundColor: '#FFD84E'},
           ]}>
           <Text
             style={[
               styles.textMedium18,
-              { marginVertical: 10, fontWeight: 'bold' },
+              {marginVertical: 10, fontWeight: 'bold'},
             ]}>
             คำถาม: {allQuestions[selectedQuestion.index].examQuestion}
           </Text>
-          <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+          <View style={{flexDirection: 'row', marginVertical: 10}}>
             <Text
               style={[
                 styles.textMedium18,
                 pageStyle.correctAnswer,
-                { textDecorationLine: 'underline' },
+                {textDecorationLine: 'underline'},
               ]}>
               นักเรียนตอบ
             </Text>
@@ -202,18 +202,18 @@ const scoreScreen = ({ navigation, route }) => {
               style={[
                 styles.textMedium18,
                 pageStyle.correctAnswer,
-                { flexWrap: 'wrap', flex: 1 },
+                {flexWrap: 'wrap', flex: 1},
               ]}>
               {choiceSelected[answerIndex].choiceValue}
             </Text>
           </View>
           {!answerResult ? (
-            <View style={{ flexDirection: 'row', marginVertical: 10 }}>
+            <View style={{flexDirection: 'row', marginVertical: 10}}>
               <Text
                 style={[
                   styles.textMedium18,
                   pageStyle.correctAnswer,
-                  { textDecorationLine: 'underline' },
+                  {textDecorationLine: 'underline'},
                 ]}>
                 คำตอบที่ถูก
               </Text>
@@ -221,7 +221,7 @@ const scoreScreen = ({ navigation, route }) => {
                 style={[
                   styles.textMedium18,
                   pageStyle.correctAnswer,
-                  { flexWrap: 'wrap', flex: 1 },
+                  {flexWrap: 'wrap', flex: 1},
                 ]}>
                 {allQuestions[answerIndex].examAnswer[0].c1}
               </Text>
@@ -230,7 +230,7 @@ const scoreScreen = ({ navigation, route }) => {
 
           <View>
             <TouchableOpacity
-              style={{ alignItems: 'center', marginVertical: 10 }}
+              style={{alignItems: 'center', marginVertical: 10}}
               onPress={() => setmodalVisible(false)}>
               <Text style={[styles.textMedium14, pageStyle.closeModal]}>
                 กลับ
@@ -243,9 +243,9 @@ const scoreScreen = ({ navigation, route }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1}}>
       <ImageBackground
-        style={{ flex: 1 }}
+        style={{flex: 1}}
         source={require('../assets/images/bg.jpg')}>
         <View
           style={{
@@ -254,9 +254,9 @@ const scoreScreen = ({ navigation, route }) => {
             marginBottom: 10,
             flex: 1,
           }}>
-          <View style={{ flex: 1 }}>
+          <View style={{flex: 1}}>
             <ScrollView>
-              <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+              <View style={{flex: 1, justifyContent: 'flex-start'}}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -264,29 +264,29 @@ const scoreScreen = ({ navigation, route }) => {
                   }}>
                   <Text
                     numberOfLines={1}
-                    style={[styles.textMedium20, { flex: 1, color: '#FFFFFF' }]}>
+                    style={[styles.textMedium20, {flex: 1, color: '#FFFFFF'}]}>
                     {csgName}
                   </Text>
                   <Text
                     style={[
                       styles.textMedium20,
-                      { textAlign: 'center', color: '#FFFFFF' },
+                      {textAlign: 'center', color: '#FFFFFF'},
                     ]}>
                     {gradeName}
                   </Text>
                 </View>
-                <View style={{ flex: 1 }}>
+                <View style={{flex: 1}}>
                   <View
                     style={{
                       marginTop: 5,
                       justifyContent: 'space-between',
                       flexDirection: 'row',
                     }}>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{flexDirection: 'row'}}>
                       <Text
                         style={[
                           styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
+                          {textAlignVertical: 'center', color: '#FFFFFF'},
                         ]}>
                         จำนวน
                       </Text>
@@ -296,16 +296,16 @@ const scoreScreen = ({ navigation, route }) => {
                       <Text
                         style={[
                           styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
+                          {textAlignVertical: 'center', color: '#FFFFFF'},
                         ]}>
                         ข้อ
                       </Text>
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{flexDirection: 'row'}}>
                       <Text
                         style={[
                           styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
+                          {textAlignVertical: 'center', color: '#FFFFFF'},
                         ]}>
                         ระดับ
                       </Text>
@@ -327,10 +327,10 @@ const scoreScreen = ({ navigation, route }) => {
                           ? level === 1
                             ? 'ง่าย'
                             : level === 3
-                              ? 'ปานกลาง'
-                              : level === 4
-                                ? 'ยาก'
-                                : null
+                            ? 'ปานกลาง'
+                            : level === 4
+                            ? 'ยาก'
+                            : null
                           : '-'}
                       </Text>
                     </View>
@@ -341,11 +341,11 @@ const scoreScreen = ({ navigation, route }) => {
                       justifyContent: 'space-between',
                       flexDirection: 'row',
                     }}>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{flexDirection: 'row'}}>
                       <Text
                         style={[
                           styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
+                          {textAlignVertical: 'center', color: '#FFFFFF'},
                         ]}>
                         ทำถูก
                       </Text>
@@ -355,16 +355,16 @@ const scoreScreen = ({ navigation, route }) => {
                       <Text
                         style={[
                           styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
+                          {textAlignVertical: 'center', color: '#FFFFFF'},
                         ]}>
                         ข้อ
                       </Text>
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{flexDirection: 'row'}}>
                       <Text
                         style={[
                           styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
+                          {textAlignVertical: 'center', color: '#FFFFFF'},
                         ]}>
                         เหลือเวลา
                       </Text>
@@ -376,7 +376,7 @@ const scoreScreen = ({ navigation, route }) => {
                       <Text
                         style={[
                           styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
+                          {textAlignVertical: 'center', color: '#FFFFFF'},
                         ]}>
                         นาที
                       </Text>
@@ -388,11 +388,11 @@ const scoreScreen = ({ navigation, route }) => {
                       justifyContent: 'space-between',
                       flexDirection: 'row',
                     }}>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{flexDirection: 'row'}}>
                       <Text
                         style={[
                           styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
+                          {textAlignVertical: 'center', color: '#FFFFFF'},
                         ]}>
                         ใช้เวลา
                       </Text>
@@ -404,16 +404,16 @@ const scoreScreen = ({ navigation, route }) => {
                       <Text
                         style={[
                           styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
+                          {textAlignVertical: 'center', color: '#FFFFFF'},
                         ]}>
                         นาที
                       </Text>
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{flexDirection: 'row'}}>
                       <Text
                         style={[
                           styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
+                          {textAlignVertical: 'center', color: '#FFFFFF'},
                         ]}>
                         เฉลี่ยข้อละ
                       </Text>
@@ -429,7 +429,7 @@ const scoreScreen = ({ navigation, route }) => {
                       <Text
                         style={[
                           styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
+                          {textAlignVertical: 'center', color: '#FFFFFF'},
                         ]}>
                         นาที
                       </Text>
@@ -448,7 +448,7 @@ const scoreScreen = ({ navigation, route }) => {
                       <Text
                         style={[
                           styles.textBold18,
-                          { textAlign: 'center', color: '#01579B' },
+                          {textAlign: 'center', color: '#01579B'},
                         ]}>
                         การคำนวนแต้มที่ได้
                       </Text>
@@ -460,21 +460,21 @@ const scoreScreen = ({ navigation, route }) => {
                         <Text
                           style={[
                             styles.textMedium16,
-                            { flex: 3, color: '#FF834E' },
+                            {flex: 3, color: '#FF834E'},
                           ]}>
                           คะแนนที่ทำถูกต้องจำนวน
                         </Text>
                         <Text
                           style={[
                             styles.textMedium16,
-                            { flex: 1, textAlign: 'right', color: '#FF834E' },
+                            {flex: 1, textAlign: 'right', color: '#FF834E'},
                           ]}>
                           {correctAnswerCount}
                         </Text>
                         <Text
                           style={[
                             styles.textMedium16,
-                            { flex: 1, textAlign: 'right', color: '#FF834E' },
+                            {flex: 1, textAlign: 'right', color: '#FF834E'},
                           ]}>
                           ข้อ
                         </Text>
@@ -487,21 +487,21 @@ const scoreScreen = ({ navigation, route }) => {
                         <Text
                           style={[
                             styles.textMedium16,
-                            { flex: 3, color: '#FF834E' },
+                            {flex: 3, color: '#FF834E'},
                           ]}>
                           คูณด้วยระดับ ความยาก
                         </Text>
                         <Text
                           style={[
                             styles.textMedium16,
-                            { flex: 1, textAlign: 'right', color: '#FF834E' },
+                            {flex: 1, textAlign: 'right', color: '#FF834E'},
                           ]}>
                           {scoreLevel}
                         </Text>
                         <Text
                           style={[
                             styles.textMedium16,
-                            { flex: 1, textAlign: 'right', color: '#FF834E' },
+                            {flex: 1, textAlign: 'right', color: '#FF834E'},
                           ]}>
                           แต้ม
                         </Text>
@@ -514,14 +514,14 @@ const scoreScreen = ({ navigation, route }) => {
                         <Text
                           style={[
                             styles.textMedium16,
-                            { flex: 3, color: '#FF834E' },
+                            {flex: 3, color: '#FF834E'},
                           ]}>
                           รวมได้แต้มเท่ากับ
                         </Text>
                         <Text
                           style={[
                             styles.textMedium16,
-                            { flex: 1, textAlign: 'right', color: '#FF834E' },
+                            {flex: 1, textAlign: 'right', color: '#FF834E'},
                           ]}>
                           {Math.round(correctAnswerCount * scoreLevel * 1000) /
                             1000}
@@ -529,7 +529,7 @@ const scoreScreen = ({ navigation, route }) => {
                         <Text
                           style={[
                             styles.textMedium16,
-                            { flex: 1, textAlign: 'right', color: '#FF834E' },
+                            {flex: 1, textAlign: 'right', color: '#FF834E'},
                           ]}>
                           แต้ม
                         </Text>
@@ -537,9 +537,9 @@ const scoreScreen = ({ navigation, route }) => {
                       {(correctAnswerCount >= (questionCount * 60) / 100 &&
                         timeUsed >= (timeOut * 30) / 100 &&
                         overTimePlus == 0) ||
-                        (correctAnswerCount <= questionCount &&
-                          timeUsed >= (timeOut * 30) / 100 &&
-                          overTimePlus > 0) ? (
+                      (correctAnswerCount <= questionCount &&
+                        timeUsed >= (timeOut * 30) / 100 &&
+                        overTimePlus > 0) ? (
                         <View>
                           <View
                             style={{
@@ -549,7 +549,7 @@ const scoreScreen = ({ navigation, route }) => {
                             <Text
                               style={[
                                 styles.textMedium16,
-                                { flex: 3, color: '#FF834E' },
+                                {flex: 3, color: '#FF834E'},
                               ]}>
                               {overTimePlus == 0
                                 ? 'เวลาคงเหลือ'
@@ -558,7 +558,7 @@ const scoreScreen = ({ navigation, route }) => {
                             <Text
                               style={[
                                 styles.textMedium16,
-                                { flex: 1, textAlign: 'right', color: '#FF834E' },
+                                {flex: 1, textAlign: 'right', color: '#FF834E'},
                               ]}>
                               {overTimePlus == 0
                                 ? timeLeft - overTimePlus
@@ -567,7 +567,7 @@ const scoreScreen = ({ navigation, route }) => {
                             <Text
                               style={[
                                 styles.textMedium16,
-                                { flex: 1, textAlign: 'right', color: '#FF834E' },
+                                {flex: 1, textAlign: 'right', color: '#FF834E'},
                               ]}>
                               วินาที
                             </Text>
@@ -580,21 +580,21 @@ const scoreScreen = ({ navigation, route }) => {
                             <Text
                               style={[
                                 styles.textMedium16,
-                                { flex: 3, color: '#FF834E' },
+                                {flex: 3, color: '#FF834E'},
                               ]}>
                               เวลาคงเหลือคูณด้วย 0.01
                             </Text>
                             <Text
                               style={[
                                 styles.textMedium16,
-                                { flex: 1, textAlign: 'right', color: '#FF834E' },
+                                {flex: 1, textAlign: 'right', color: '#FF834E'},
                               ]}>
                               {(timeLeft - overTimePlus) / 100}
                             </Text>
                             <Text
                               style={[
                                 styles.textMedium16,
-                                { flex: 1, textAlign: 'right', color: '#FF834E' },
+                                {flex: 1, textAlign: 'right', color: '#FF834E'},
                               ]}>
                               แต้ม
                             </Text>
@@ -610,21 +610,21 @@ const scoreScreen = ({ navigation, route }) => {
                         <Text
                           style={[
                             styles.textMedium16,
-                            { flex: 3, color: '#FF834E' },
+                            {flex: 3, color: '#FF834E'},
                           ]}>
                           รวมได้แต้มทั้งสิ้น
                         </Text>
                         <Text
                           style={[
                             styles.textMedium16,
-                            { flex: 1, textAlign: 'right', color: '#01579B' },
+                            {flex: 1, textAlign: 'right', color: '#01579B'},
                           ]}>
                           {sumScore}
                         </Text>
                         <Text
                           style={[
                             styles.textMedium16,
-                            { flex: 1, textAlign: 'right', color: '#FF834E' },
+                            {flex: 1, textAlign: 'right', color: '#FF834E'},
                           ]}>
                           แต้ม
                         </Text>
@@ -641,76 +641,76 @@ const scoreScreen = ({ navigation, route }) => {
                         flex: 1,
                       }}>
                       <ScrollView
-                        style={{ paddingVertical: 15 }}
+                        style={{paddingVertical: 15}}
                         showsVerticalScrollIndicator={false}>
                         {allQuestions
                           ? allQuestions.map((item, index) => {
-                            const checkAnswer =
-                              item.examAnswer[0].c1 ===
-                              choiceSelected[index].choiceValue;
-                            const checkAnsTimeOut =
-                              choiceSelected[index].choiceValue == 'หมดเวลา'
-                                ? 'หมดเวลา'
-                                : 'ผิด';
-                            const checkColorTimeOut =
-                              choiceSelected[index].choiceValue == 'หมดเวลา'
-                                ? pageStyle.timeOutColor
-                                : pageStyle.falseColor;
-                            return (
-                              <View
-                                key={item.examId}
-                                style={{
-                                  justifyContent: 'space-between',
-                                  flexDirection: 'row',
-                                  marginBottom: 5,
-                                }}>
-                                <View style={{ flexDirection: 'row' }}>
-                                  <Text
-                                    style={[
-                                      styles.textMedium16,
-                                      { marginRight: 5, fontWeight: 'bold' },
-                                      checkAnswer
-                                        ? pageStyle.trueColor
-                                        : checkColorTimeOut,
-                                    ]}>
-                                    ข้อที่ {index + 1}
-                                  </Text>
-                                  <Text
-                                    style={[
-                                      styles.textMedium16,
-                                      { marginRight: 5, fontWeight: 'bold' },
-                                      checkAnswer
-                                        ? pageStyle.trueColor
-                                        : checkColorTimeOut,
-                                    ]}>
-                                    {checkAnswer
-                                      ? 'ถูกต้อง'
-                                      : checkAnsTimeOut}
-                                  </Text>
-                                </View>
-                                <View style={{ flexDirection: 'row' }}>
-                                  <TouchableOpacity
-                                    onPress={() =>
-                                      toggleModal(index, checkAnswer)
-                                    }>
-                                    {/* <TouchableOpacity onPress={checkAnswer ? toggleCorrectModal : toggleWrongModal}> */}
+                              const checkAnswer =
+                                item.examAnswer[0].c1 ===
+                                choiceSelected[index].choiceValue;
+                              const checkAnsTimeOut =
+                                choiceSelected[index].choiceValue == 'หมดเวลา'
+                                  ? 'หมดเวลา'
+                                  : 'ผิด';
+                              const checkColorTimeOut =
+                                choiceSelected[index].choiceValue == 'หมดเวลา'
+                                  ? pageStyle.timeOutColor
+                                  : pageStyle.falseColor;
+                              return (
+                                <View
+                                  key={item.examId}
+                                  style={{
+                                    justifyContent: 'space-between',
+                                    flexDirection: 'row',
+                                    marginBottom: 5,
+                                  }}>
+                                  <View style={{flexDirection: 'row'}}>
                                     <Text
                                       style={[
                                         styles.textMedium16,
-                                        { fontWeight: 'bold' },
+                                        {marginRight: 5, fontWeight: 'bold'},
                                         checkAnswer
                                           ? pageStyle.trueColor
                                           : checkColorTimeOut,
                                       ]}>
-                                      {checkAnswer ? 'ดูคำถาม' : 'ดูเฉลย'}
+                                      ข้อที่ {index + 1}
                                     </Text>
-                                  </TouchableOpacity>
+                                    <Text
+                                      style={[
+                                        styles.textMedium16,
+                                        {marginRight: 5, fontWeight: 'bold'},
+                                        checkAnswer
+                                          ? pageStyle.trueColor
+                                          : checkColorTimeOut,
+                                      ]}>
+                                      {checkAnswer
+                                        ? 'ถูกต้อง'
+                                        : checkAnsTimeOut}
+                                    </Text>
+                                  </View>
+                                  <View style={{flexDirection: 'row'}}>
+                                    <TouchableOpacity
+                                      onPress={() =>
+                                        toggleModal(index, checkAnswer)
+                                      }>
+                                      {/* <TouchableOpacity onPress={checkAnswer ? toggleCorrectModal : toggleWrongModal}> */}
+                                      <Text
+                                        style={[
+                                          styles.textMedium16,
+                                          {fontWeight: 'bold'},
+                                          checkAnswer
+                                            ? pageStyle.trueColor
+                                            : checkColorTimeOut,
+                                        ]}>
+                                        {checkAnswer ? 'ดูคำถาม' : 'ดูเฉลย'}
+                                      </Text>
+                                    </TouchableOpacity>
+                                  </View>
                                 </View>
-                              </View>
-                            );
-                          })
+                              );
+                            })
                           : null}
-                        <View style={{ height: 30 }} />
+                        <View style={{height: 30}} />
                       </ScrollView>
                     </View>
                   )}
@@ -723,7 +723,7 @@ const scoreScreen = ({ navigation, route }) => {
                         marginTop: 20,
                       }}>
                       <TouchableOpacity
-                        style={{ alignItems: 'center', marginTop: 10 }}
+                        style={{alignItems: 'center', marginTop: 10}}
                         onPress={() =>
                           navigation.navigate('ranking', {
                             csgId: csgId,
@@ -760,7 +760,7 @@ const scoreScreen = ({ navigation, route }) => {
                         marginTop: 20,
                       }}>
                       <TouchableOpacity
-                        style={{ alignItems: 'center', marginTop: 10 }}
+                        style={{alignItems: 'center', marginTop: 10}}
                         onPress={() => setshowDetailScore(true)}>
                         <Text
                           style={[
@@ -781,13 +781,13 @@ const scoreScreen = ({ navigation, route }) => {
                         </Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        style={{ alignItems: 'center', marginTop: 10 }}
+                        style={{alignItems: 'center', marginTop: 10}}
                         onPress={() =>
                           navigation.navigate('optionTest', {
                             subid: csgId,
                             gradeid: gradeId,
                             csgName: csgName,
-                            from: 'scoreScreen'
+                            from: 'scoreScreen',
                           })
                         }>
                         <Text

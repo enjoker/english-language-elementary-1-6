@@ -39,7 +39,7 @@ const testScreen = ({navigation, route}) => {
   const [isConfirmExamVisible, setConfirmExamVisible] = useState(false);
   const [isIncompleteVisible, setIncompleteVisible] = useState(false);
   const [showButtonSendExam, setshowButtonSendExam] = useState(false);
-  const [numberTest, setnumberTest] = useState();
+ 
 
   const findChoice = item => {
     let choice = null;
@@ -183,8 +183,8 @@ const testScreen = ({navigation, route}) => {
     }
   };
   const warpExam = async () => {
-    let test = [];
-    let yoyo = 0;
+    let test = [];    
+    console.log('1 warpExam');
     for (let k = 0; k < questionDetails.length; k++) {
       //console.log(choiceSelected);
       choiceSelected.sort((a, b) => (a.questionId > b.questionId ? 1 : -1));
@@ -207,10 +207,8 @@ const testScreen = ({navigation, route}) => {
     //console.log(choiceSelected)
     if (choiceUnAnswered[0].choiceValue == false) {
       //console.log(choiceUnAnswered[0].questionId);
-      setcurrentQuestion(choiceUnAnswered[0].questionId);
-      yoyo = choiceUnAnswered[1].questionId;
-      setnumberTest(yoyo);
-    }
+      setcurrentQuestion(choiceUnAnswered[0].questionId);     
+    }   
     setshowButtonSendExam(true);
   };
 
@@ -218,7 +216,7 @@ const testScreen = ({navigation, route}) => {
     if (showButtonSendExam == true) {
       warpExam();
     }
-  }, [choiceUnAnswered, choiceSelected, numberTest]);
+  }, [choiceUnAnswered, choiceSelected]);
 
   useEffect(() => {
     findIndexChoice();
@@ -350,9 +348,13 @@ const testScreen = ({navigation, route}) => {
                               resizeMode="contain"
                               imageBackgroundColor="#ffffff"
                               style={{width: 50, height: 50}}
-                              source={
-                                questionDetails[currentQuestion].examPicQuestion
-                              }
+                              source={{
+                                uri:
+                                  'https://api.test.schoolcare.app/getImg/getUploadFile?name=' +
+                                  questionDetails[
+                                    currentQuestion
+                                  ].examPicQuestion.substr(8),
+                              }}
                             />
                           </View>
                         ) : null}
@@ -429,7 +431,7 @@ const testScreen = ({navigation, route}) => {
                         </View>
                       </TouchableOpacity>
                     )}
-                    
+
                     {currentQuestion === questionDetails.length - 1 ? (
                       <TouchableOpacity
                         style={{marginTop: 10}}
@@ -465,6 +467,7 @@ const testScreen = ({navigation, route}) => {
                       </TouchableOpacity>
                     )}
                   </View>
+                  {console.log(choiceSelected.length + '/' + questionDetails.length + '/' +showButtonSendExam)}
                   {choiceSelected.length !== questionDetails.length ? (
                     showButtonSendExam ? (
                       <View style={{alignItems: 'center'}}>
@@ -486,7 +489,7 @@ const testScreen = ({navigation, route}) => {
                         </TouchableOpacity>
                       </View>
                     ) : null
-                  ) : (
+                  ) : showButtonSendExam ? (
                     <View style={{alignItems: 'center'}}>
                       <TouchableOpacity
                         style={{marginTop: 10}}
@@ -502,7 +505,7 @@ const testScreen = ({navigation, route}) => {
                         </View>
                       </TouchableOpacity>
                     </View>
-                  )}
+                  ) : null}
                 </ScrollView>
               </View>
             </View>
