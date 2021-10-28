@@ -18,6 +18,9 @@ import { useDispatch, useSelector } from 'react-redux';
 const typeScreen = ({ navigation }) => {
   const ContainerContent = () => {
     const SubGradeDetail = useSelector(state => state.subGrade.showSubGrade);
+   
+    const [newSubGradeDetail, setnewSubGradeDetail] = useState([]);
+    console.log(SubGradeDetail.length);
     const [colorBox, setcolorBox] = useState([
       '#028c6a',
       '#1FA246',
@@ -27,6 +30,41 @@ const typeScreen = ({ navigation }) => {
       '#EF2A80',
       '#B13AFA',
     ]);
+    useEffect(() => {
+      let test = [];
+      let dontUse = [];
+      let dataLength = SubGradeDetail.length
+      for (let k = 0; k < dataLength; k++) {   
+        let value = SubGradeDetail.splice(0, 1);   
+        if (value != '') {        
+          if (
+            value[0].csg_name == 'test' ||
+            value[0].csg_name == 'test1' ||
+            value[0].csg_name == 'test2' ||
+            value[0].csg_name == 'test3' ||
+            value[0].csg_name == 'Test' ||
+            value[0].csg_name == 'Test1' ||
+            value[0].csg_name == 'Test2' ||
+            value[0].csg_name == 'Test3'
+          ) {
+            dontUse.push(value[0]);
+          } else {
+            test.push(value[0]);
+          }
+        }
+      }
+      for (let k = 0; k < test.length; k++) {
+        console.log('for test');
+        SubGradeDetail.push(test[k]);
+      }
+      for (let k = 0; k < dontUse.length; k++) {
+        console.log('for dontUse');
+        SubGradeDetail.push(dontUse[k]);
+      }
+      //SubGradeDetail.push(test.concat(dontUse))
+      setnewSubGradeDetail(test);
+    }, [SubGradeDetail]);
+  
 
     return (
       <View>
@@ -34,8 +72,8 @@ const typeScreen = ({ navigation }) => {
           วิชาย่อย
         </Text>
         <View style={{ flex: 1, alignItems: 'center' }}>
-          {SubGradeDetail !== null
-            ? SubGradeDetail.map((item, index) => {
+          {newSubGradeDetail !== null
+            ? newSubGradeDetail.map((item, index) => {
               return (
                 <TouchableOpacity
                   key={item.csg_id}

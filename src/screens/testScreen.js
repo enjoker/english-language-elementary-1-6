@@ -31,15 +31,14 @@ const testScreen = ({navigation, route}) => {
   const [choiceUnAnswered, setchoiceUnAnswered] = useState([]);
   const [value, setValue] = useState();
   const [value2, setValue2] = useState();
-  const [seconds, setseconds] = useState(timeOut * 60);
-  const [secondsPlus, setsecondsPlus] = useState(0 * 60);
+  const [seconds, setseconds] = useState(timeOut);
+  const [secondsPlus, setsecondsPlus] = useState(0);
   const [showOvertimePlus, setshowOvertimePlus] = useState(false);
   const [showModalTimeOut, setshowModalTimeOut] = useState(true);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isConfirmExamVisible, setConfirmExamVisible] = useState(false);
   const [isIncompleteVisible, setIncompleteVisible] = useState(false);
   const [showButtonSendExam, setshowButtonSendExam] = useState(false);
- 
 
   const findChoice = item => {
     let choice = null;
@@ -118,7 +117,7 @@ const testScreen = ({navigation, route}) => {
                   questionCount: questionDetails.length,
                   level: level,
                   timeLeft: seconds,
-                  timeOut: timeOut * 60,
+                  timeOut: timeOut,
                   choiceSelected: choiceSelected,
                   gradeName: gradeName,
                   csgId: csgId,
@@ -142,7 +141,7 @@ const testScreen = ({navigation, route}) => {
                   questionCount: questionDetails.length,
                   level: level,
                   timeLeft: seconds,
-                  timeOut: timeOut * 60,
+                  timeOut: timeOut,
                   choiceSelected: choiceSelected,
                   gradeName: gradeName,
                   csgId: csgId,
@@ -167,7 +166,7 @@ const testScreen = ({navigation, route}) => {
                 questionCount: questionDetails.length,
                 level: level,
                 timeLeft: seconds,
-                timeOut: timeOut * 60,
+                timeOut: timeOut,
                 choiceSelected: choiceSelected,
                 gradeName: gradeName,
                 csgId: csgId,
@@ -183,7 +182,7 @@ const testScreen = ({navigation, route}) => {
     }
   };
   const warpExam = async () => {
-    let test = [];    
+    let test = [];
     console.log('1 warpExam');
     for (let k = 0; k < questionDetails.length; k++) {
       //console.log(choiceSelected);
@@ -207,8 +206,8 @@ const testScreen = ({navigation, route}) => {
     //console.log(choiceSelected)
     if (choiceUnAnswered[0].choiceValue == false) {
       //console.log(choiceUnAnswered[0].questionId);
-      setcurrentQuestion(choiceUnAnswered[0].questionId);     
-    }   
+      setcurrentQuestion(choiceUnAnswered[0].questionId);
+    }
     setshowButtonSendExam(true);
   };
 
@@ -404,6 +403,44 @@ const testScreen = ({navigation, route}) => {
                       </View>
                     ) : null}
                   </View>
+                  {choiceSelected.length !== questionDetails.length ? (
+                    showButtonSendExam ? (
+                      <View style={{alignItems: 'center'}}>
+                        <TouchableOpacity
+                          style={{marginTop: 10}}
+                          onPress={() => {
+                            warpExam();
+                            setchoiceUnAnswered([]);
+                          }}>
+                          <View style={[pageStyle.buttonUnAnswered]}>
+                            <Text
+                              style={[
+                                styles.textMedium16,
+                                pageStyle.textbuttonNB,
+                              ]}>
+                              กดเพื่อไปข้อที่ยังไม่ได้ทำ
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    ) : null
+                  ) : showButtonSendExam ? (
+                    <View style={{alignItems: 'center'}}>
+                      <TouchableOpacity
+                        style={{marginTop: 10}}
+                        onPress={() => SendExamHandler(0)}>
+                        <View style={[pageStyle.buttonNB]}>
+                          <Text
+                            style={[
+                              styles.textMedium16,
+                              pageStyle.textbuttonNB,
+                            ]}>
+                            ส่งคำตอบ
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  ) : null}
                   <View
                     style={{
                       flexDirection: 'row',
@@ -467,45 +504,6 @@ const testScreen = ({navigation, route}) => {
                       </TouchableOpacity>
                     )}
                   </View>
-                  {console.log(choiceSelected.length + '/' + questionDetails.length + '/' +showButtonSendExam)}
-                  {choiceSelected.length !== questionDetails.length ? (
-                    showButtonSendExam ? (
-                      <View style={{alignItems: 'center'}}>
-                        <TouchableOpacity
-                          style={{marginTop: 10}}
-                          onPress={() => {
-                            warpExam();
-                            setchoiceUnAnswered([]);
-                          }}>
-                          <View style={[pageStyle.buttonUnAnswered]}>
-                            <Text
-                              style={[
-                                styles.textMedium16,
-                                pageStyle.textbuttonNB,
-                              ]}>
-                              กดเพื่อไปข้อที่ยังไม่ได้ทำ
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                    ) : null
-                  ) : showButtonSendExam ? (
-                    <View style={{alignItems: 'center'}}>
-                      <TouchableOpacity
-                        style={{marginTop: 10}}
-                        onPress={() => SendExamHandler(0)}>
-                        <View style={[pageStyle.buttonNB]}>
-                          <Text
-                            style={[
-                              styles.textMedium16,
-                              pageStyle.textbuttonNB,
-                            ]}>
-                            ส่งคำตอบ
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  ) : null}
                 </ScrollView>
               </View>
             </View>
