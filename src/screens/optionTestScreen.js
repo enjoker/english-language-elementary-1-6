@@ -15,7 +15,6 @@ import {
 import styles from '../styles/style';
 import {Image, Icon, Avatar, normalize, Card} from 'react-native-elements';
 import {useDispatch, useSelector} from 'react-redux';
-
 import {getSubAndTimeGrade1} from '../functions/functions';
 import {getSubAndTimeGrade2} from '../functions/functions';
 import {getSubAndTimeGrade3} from '../functions/functions';
@@ -34,14 +33,12 @@ const optionTestScreen = ({navigation, route}) => {
   const [timeOut, settimeOut] = useState('-');
   const [gradeName, setgradeName] = useState('');
   const [showLevel, setshowLevel] = useState(true);
-
   const [subAllDetail, setsubAllDetail] = useState([]);
   const [subDetail, setsubDetail] = useState([]);
   const [timeTestEasy, settimeTestEasy] = useState(null);
   const [timeTestMedium, settimeTestMedium] = useState(null);
   const [timeTestHard, settimeTestHard] = useState(null);
   const dispatch = useDispatch();
-
   from === 'scoreScreen' || from === 'rankingScreen' // clear stack ถ้ามาจากหน้า score หรือ ranking
     ? navigation.reset({
         index: 1,
@@ -163,6 +160,9 @@ const optionTestScreen = ({navigation, route}) => {
             csgId: subid,
             csgName: csgName,
             gradeId: gradeid,
+            timeTestEasy: timeTestEasy,
+            timeTestMedium: timeTestMedium,
+            timeTestHard: timeTestHard,
           });
         } catch (e) {
           Alert.alert('แจ้งเตือน', e.message);
@@ -237,7 +237,7 @@ const optionTestScreen = ({navigation, route}) => {
         setshowLevel(false);
         setlevelSelected(3);
       }
-    }, [csgName]);
+    }, []);
     return (
       <View style={{flex: 1, justifyContent: 'flex-start'}}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>

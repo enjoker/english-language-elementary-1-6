@@ -23,7 +23,17 @@ import {RadioButton} from 'react-native-paper';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 const testScreen = ({navigation, route}) => {
-  const {timeOut, level, gradeName, csgId, csgName, gradeId} = route.params;
+  const {
+    timeOut,
+    level,
+    gradeName,
+    csgId,
+    csgName,
+    gradeId,
+    timeTestEasy,
+    timeTestMedium,
+    timeTestHard,
+  } = route.params;
   const questionDetails = useSelector(state => state.level.randomQuestions);
   const {width} = Dimensions.get('window');
   const [currentQuestion, setcurrentQuestion] = useState(0);
@@ -124,6 +134,9 @@ const testScreen = ({navigation, route}) => {
                   csgName: csgName,
                   gradeId: gradeId,
                   overTimePlus: secondsPlus,
+                  timeTestEasy: timeTestEasy,
+                  timeTestMedium: timeTestMedium,
+                  timeTestHard: timeTestHard,
                 },
               },
             ],
@@ -148,6 +161,9 @@ const testScreen = ({navigation, route}) => {
                   csgName: csgName,
                   gradeId: gradeId,
                   overTimePlus: secondsPlus,
+                  timeTestEasy: timeTestEasy,
+                  timeTestMedium: timeTestMedium,
+                  timeTestHard: timeTestHard,
                 },
               },
             ],
@@ -173,6 +189,9 @@ const testScreen = ({navigation, route}) => {
                 csgName: csgName,
                 gradeId: gradeId,
                 overTimePlus: secondsPlus,
+                timeTestEasy: timeTestEasy,
+                timeTestMedium: timeTestMedium,
+                timeTestHard: timeTestHard,
               },
             },
           ],
