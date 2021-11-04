@@ -23,6 +23,9 @@ import {getSubAndTimeGrade5} from '../functions/functions';
 import {getSubAndTimeGrade6} from '../functions/functions';
 import * as levelTestActions from '../store/actions/levelTest';
 
+//import Ads
+import BannerAds from '../components/bannerAds';
+
 const optionTestScreen = ({navigation, route}) => {
   const subid = route.params.subid;
   const gradeid = route.params.gradeid;
@@ -436,15 +439,7 @@ const optionTestScreen = ({navigation, route}) => {
           </View>
         </View>
       </ImageBackground>
-      <View
-        style={{
-          backgroundColor: '#EEEEEE',
-          height: 50,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text>Ads Area</Text>
-      </View>
+      <BannerAds />
     </SafeAreaView>
   );
 };

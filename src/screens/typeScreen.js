@@ -14,6 +14,8 @@ import {
 import styles from '../styles/style';
 import { Image, Icon, Avatar, normalize, Card } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
+//import Ads
+import BannerAds from '../components/bannerAds';
 
 const typeScreen = ({ navigation }) => {
   const ContainerContent = () => {
@@ -135,9 +137,7 @@ const typeScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </ImageBackground>
-      <View style={{ backgroundColor: '#EEEEEE', height: 50, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Ads Area</Text>
-      </View>
+      <BannerAds />
     </SafeAreaView>
   );
 };

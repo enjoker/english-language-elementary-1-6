@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import styles from '../styles/style';
 import { Input, Button } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+//import Ads
+import BannerAds from '../components/bannerAds';
 
 const renameScreen = ({ navigation }) => {
    const [name, setname] = useState()
@@ -59,9 +61,7 @@ const renameScreen = ({ navigation }) => {
                onPress={saveName}
             />
          </ImageBackground>
-         <View style={{ backgroundColor: '#EEEEEE', height: 50, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Ads Area</Text>
-         </View>
+         <BannerAds />
       </SafeAreaView>
    );
 }

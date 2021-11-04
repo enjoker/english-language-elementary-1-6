@@ -21,6 +21,8 @@ import ImageModal from 'react-native-image-modal';
 import Modal from 'react-native-modal';
 import {RadioButton} from 'react-native-paper';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+//import Ads
+import BannerAds from '../components/bannerAds';
 
 const testScreen = ({navigation, route}) => {
   const {
@@ -667,15 +669,7 @@ const testScreen = ({navigation, route}) => {
           </View>
         </Modal>
       </ImageBackground>
-      <View
-        style={{
-          backgroundColor: '#EEEEEE',
-          height: 50,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text>Ads Area</Text>
-      </View>
+      <BannerAds />
     </SafeAreaView>
   );
 };

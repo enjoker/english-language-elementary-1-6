@@ -15,8 +15,9 @@ import AdvertIcon from '../assets/images/icons/Vector.svg';
 import Advert2Icon from '../assets/images/icons/Vector2.svg';
 
 // import Ads
-import { useRewardedAd } from '@react-native-admob/admob';
 import BannerAds from '../components/bannerAds';
+import { useRewardedAd } from '@react-native-admob/admob';
+
 
 const hookOptions = {
   loadOnDismissed: true
