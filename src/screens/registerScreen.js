@@ -24,6 +24,8 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as userActions from '../store/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
+// import Ads
+import BannerAds from '../components/bannerAds'
 
 // import รูปบ้าน
 import HomeIcon from '../assets/images/icons/HomeIcon.svg';
@@ -34,14 +36,14 @@ const registerScreen = ({ navigation }) => {
   const ContainerContent = () => {
     const [name, setname] = useState();
     const dispatch = useDispatch();
-    useEffect(() => { }, [name]);
-    const register = async () => {
-      try {
-        dispatch(userActions.addUser(name));
-      } catch (error) {
-        console.log(error);
-      }
+
+    const advertPrivilege = async () => {
+      dispatch(userActions.newPrivilege());
+      navigation.navigate('advert', { username: name })
     };
+
+    useEffect(() => { }, [name]);
+
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Image
@@ -88,7 +90,7 @@ const registerScreen = ({ navigation }) => {
               width: 100,
             },
           ]}
-          onPress={register}>
+          onPress={() => advertPrivilege()}>
           ตกลง
         </Text>
       </View>
@@ -107,9 +109,7 @@ const registerScreen = ({ navigation }) => {
           <ContainerContent />
         </View>
       </View>
-      <View style={{ backgroundColor: '#EEEEEE', height: 50, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Ads Area</Text>
-      </View>
+      <BannerAds />
     </SafeAreaView>
   );
 };
