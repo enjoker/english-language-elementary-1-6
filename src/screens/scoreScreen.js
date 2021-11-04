@@ -414,8 +414,8 @@ const scoreScreen = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={{alignItems: 'center'}}
-              onPress={() => show()}>
+              style={{ alignItems: 'center' }}
+              onPress={() => { show(); setprivilegeVisible2(false); }}>
               <Text style={[styles.textLight18, pageStyle.overTimeRight]}>
                 กดดูโฆษณาเพื่อรับ 2 สิทธิ์
               </Text>
