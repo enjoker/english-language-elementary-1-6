@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   ScrollView,
   Dimensions,
+  Alert
 } from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -38,8 +39,15 @@ const registerScreen = ({ navigation }) => {
     const dispatch = useDispatch();
 
     const advertPrivilege = async () => {
-      dispatch(userActions.newPrivilege());
-      navigation.navigate('advert', { username: name })
+      console.log(name);
+      if (name == '' || name == undefined || name == null) {
+        Alert.alert('แจ้งเตือน', 'กรุณาใส่ชื่อผู้ใช้งาน', [{text: 'ยืนยัน'}]);
+        console.log('if');
+      } else {
+        dispatch(userActions.newPrivilege());
+        navigation.navigate('advert', {username: name});
+        console.log('else');
+      }
     };
 
     useEffect(() => { }, [name]);
