@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,21 +10,21 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import {CommonActions} from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 import styles from '../styles/style';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import ImageModal from 'react-native-image-modal';
 import Modal from 'react-native-modal';
-import {RadioButton} from 'react-native-paper';
+import { RadioButton } from 'react-native-paper';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-//import Ads
-import BannerAds from '../components/bannerAds';
+// import Ads
+import BannerAds from '../components/bannerAds'
 
-const testScreen = ({navigation, route}) => {
+const testScreen = ({ navigation, route }) => {
   const {
     timeOut,
     level,
@@ -37,7 +37,7 @@ const testScreen = ({navigation, route}) => {
     timeTestHard,
   } = route.params;
   const questionDetails = useSelector(state => state.level.randomQuestions);
-  const {width} = Dimensions.get('window');
+  const { width } = Dimensions.get('window');
   const [currentQuestion, setcurrentQuestion] = useState(0);
   const [choiceSelected, setchoiceSelected] = useState([]);
   const [choiceUnAnswered, setchoiceUnAnswered] = useState([]);
@@ -83,12 +83,12 @@ const testScreen = ({navigation, route}) => {
     );
     checkSelected === -1
       ? setchoiceSelected([
-          ...choiceSelected,
-          {
-            questionId: currentQuestion,
-            choiceValue: choiceValue,
-          },
-        ])
+        ...choiceSelected,
+        {
+          questionId: currentQuestion,
+          choiceValue: choiceValue,
+        },
+      ])
       : [(choiceSelected[checkSelected].choiceValue = choiceValue)];
   };
 
@@ -106,13 +106,13 @@ const testScreen = ({navigation, route}) => {
           let value = choiceSelected.splice(0, 1);
           if (value != '') {
             if (value[0].questionId !== k) {
-              choiceTimeOut.push({choiceValue: 'หมดเวลา', questionId: k});
+              choiceTimeOut.push({ choiceValue: 'หมดเวลา', questionId: k });
               choiceSelected.unshift(value[0]);
             } else {
               choiceTimeOut.push(value[0]);
             }
           } else {
-            choiceTimeOut.push({choiceValue: 'หมดเวลา', questionId: k});
+            choiceTimeOut.push({ choiceValue: 'หมดเวลา', questionId: k });
           }
         }
         for (let k = 0; k < choiceTimeOut.length; k++) {
@@ -122,7 +122,7 @@ const testScreen = ({navigation, route}) => {
           CommonActions.reset({
             index: 1,
             routes: [
-              {name: 'home'},
+              { name: 'home' },
               {
                 name: 'score',
                 params: {
@@ -149,7 +149,7 @@ const testScreen = ({navigation, route}) => {
           CommonActions.reset({
             index: 1,
             routes: [
-              {name: 'home'},
+              { name: 'home' },
               {
                 name: 'score',
                 params: {
@@ -177,7 +177,7 @@ const testScreen = ({navigation, route}) => {
         CommonActions.reset({
           index: 1,
           routes: [
-            {name: 'home'},
+            { name: 'home' },
             {
               name: 'score',
               params: {
@@ -204,20 +204,19 @@ const testScreen = ({navigation, route}) => {
   };
   const warpExam = async () => {
     let test = [];
-    console.log('1 warpExam');
     for (let k = 0; k < questionDetails.length; k++) {
       //console.log(choiceSelected);
       choiceSelected.sort((a, b) => (a.questionId > b.questionId ? 1 : -1));
       let value = choiceSelected.splice(0, 1);
       if (value != '') {
         if (value[0].questionId !== k) {
-          choiceUnAnswered.push({choiceValue: false, questionId: k});
+          choiceUnAnswered.push({ choiceValue: false, questionId: k });
           choiceSelected.unshift(value[0]);
         } else {
           test.push(value[0]);
         }
       } else {
-        choiceUnAnswered.push({choiceValue: false, questionId: k});
+        choiceUnAnswered.push({ choiceValue: false, questionId: k });
       }
     }
     for (let k = 0; k < test.length; k++) {
@@ -274,15 +273,15 @@ const testScreen = ({navigation, route}) => {
   useEffect(() => {
     if (questionDetails.length == 0) {
       Alert.alert('แจ้งเตือน', 'วิชาย่อยนี้ยังไม่มีข้อสอบ', [
-        {text: 'ยืนยัน', onPress: () => navigation.navigate('type')},
+        { text: 'ยืนยัน', onPress: () => navigation.navigate('type') },
       ]);
     }
   }, [questionDetails]);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <ImageBackground
-        style={{flex: 1}}
+        style={{ flex: 1 }}
         source={require('../assets/images/bg.jpg')}>
         <View
           style={{
@@ -291,31 +290,19 @@ const testScreen = ({navigation, route}) => {
             marginBottom: 10,
             flex: 1,
           }}>
-          <View style={{flex: 1}}>
-            <View style={{flex: 1, justifyContent: 'flex-start'}}>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text
-                  numberOfLines={1}
-                  style={[styles.textMedium20, {flex: 1, color: '#FFFFFF'}]}>
+          <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text numberOfLines={1} style={[styles.textMedium20, { flex: 1, color: '#FFFFFF' }]}>
                   {csgName}
                 </Text>
-                <Text
-                  style={[
-                    styles.textMedium20,
-                    {textAlign: 'center', color: '#FFFFFF'},
-                  ]}>
+                <Text style={[ styles.textMedium20, { textAlign: 'center', color: '#FFFFFF' }]}>
                   {gradeName}
                 </Text>
               </View>
-              <View style={{flex: 1}}>
-                <View
-                  style={{
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                    marginVertical: 5,
-                  }}>
-                  <View style={{flexDirection: 'row'}}>
+              <View style={{ flex: 1 }}>
+                <View style={{ justifyContent: 'space-between', flexDirection: 'row', marginVertical: 5 }}>
+                  <View style={{ flexDirection: 'row' }}>
                     <Text style={[styles.textMedium14, pageStyle.textEtc]}>
                       ข้อที่
                     </Text>
@@ -323,15 +310,15 @@ const testScreen = ({navigation, route}) => {
                       {currentQuestion + 1}/{questionDetails.length}
                     </Text>
                   </View>
-                  <View style={{flexDirection: 'row'}}>
+                  <View style={{ flexDirection: 'row' }}>
                     <Text style={[styles.textMedium14, pageStyle.textEtc]}>
                       เหลือเวลา
                     </Text>
                     <Text style={[styles.textMedium14, pageStyle.boxYello]}>
                       {showOvertimePlus
                         ? new Date(secondsPlus * 1000)
-                            .toISOString()
-                            .substr(14, 5)
+                          .toISOString()
+                          .substr(14, 5)
                         : new Date(seconds * 1000).toISOString().substr(14, 5)}
 
                       {/*  hh/mm/ss
@@ -343,14 +330,14 @@ const testScreen = ({navigation, route}) => {
                   </View>
                 </View>
                 <ScrollView>
-                  <View style={{justifyContent: 'center'}}>
+                  <View style={{ justifyContent: 'center' }}>
                     {questionDetails[currentQuestion] ? (
                       // questionDetails.map(item => {
                       //     return (
                       <View
-                        style={{width: width - wp('10%'), padding: 8}}
+                        style={{ width: width - wp('10%'), padding: 8 }}
                         key={questionDetails[currentQuestion].examId}>
-                        <View style={{marginTop: 10, marginBottom: 20}}>
+                        <View style={{ marginTop: 10, marginBottom: 20 }}>
                           <Text
                             style={[
                               styles.textBold16,
@@ -361,30 +348,30 @@ const testScreen = ({navigation, route}) => {
                         </View>
                         {questionDetails[currentQuestion].examPicQuestion !==
                           null &&
-                        questionDetails[currentQuestion].examPicQuestion !==
+                          questionDetails[currentQuestion].examPicQuestion !==
                           '' ? (
-                          <View style={{marginVertical: 5}}>
+                          <View style={{ marginVertical: 5 }}>
                             <ImageModal
                               resizeMode="contain"
+                              modalImageResizeMode="contain"
                               imageBackgroundColor="#ffffff"
-                              style={{width: 50, height: 50}}
+                              style={{ width: 100, height: 100 }}
                               source={{
                                 uri:
                                   'https://api.test.schoolcare.app/getImg/getUploadFile?name=' +
-                                  questionDetails[
-                                    currentQuestion
-                                  ].examPicQuestion.substr(8),
+                                  (questionDetails[currentQuestion].examPicQuestion).substr(8)
                               }}
                             />
                           </View>
                         ) : null}
-                        <View style={{marginVertical: 5}}>
+                        <View style={{ marginVertical: 5 }}>
                           <RadioButton.Group
                             onValueChange={newValue => selectChoice(newValue)}
                             value={value}>
                             {questionDetails[currentQuestion].examChoice.map(
                               (item, index) => {
                                 const choiceValue = findChoice(item);
+                                console.log(questionDetails);
                                 return (
                                   <View style={pageStyle.radioZone} key={index}>
                                     <RadioButton
@@ -401,8 +388,8 @@ const testScreen = ({navigation, route}) => {
                                             value == item.c2 ||
                                             value == item.c3 ||
                                             value == item.c4
-                                          ? pageStyle.activeBg
-                                          : pageStyle.noneActiveBg,
+                                            ? pageStyle.activeBg
+                                            : pageStyle.noneActiveBg,
                                       ]}
                                       onPress={() => {
                                         selectChoice(choiceValue);
@@ -410,7 +397,7 @@ const testScreen = ({navigation, route}) => {
                                       <Text
                                         style={[
                                           styles.textBold16,
-                                          {textAlignVertical: 'center'},
+                                          { textAlignVertical: 'center' },
                                         ]}>
                                         {' ' + choiceValue}
                                       </Text>
@@ -426,9 +413,9 @@ const testScreen = ({navigation, route}) => {
                   </View>
                   {choiceSelected.length !== questionDetails.length ? (
                     showButtonSendExam ? (
-                      <View style={{alignItems: 'center'}}>
+                      <View style={{ alignItems: 'center' }}>
                         <TouchableOpacity
-                          style={{marginTop: 10}}
+                          style={{ marginTop: 10 }}
                           onPress={() => {
                             warpExam();
                             setchoiceUnAnswered([]);
@@ -446,9 +433,9 @@ const testScreen = ({navigation, route}) => {
                       </View>
                     ) : null
                   ) : showButtonSendExam ? (
-                    <View style={{alignItems: 'center'}}>
+                    <View style={{ alignItems: 'center' }}>
                       <TouchableOpacity
-                        style={{marginTop: 10}}
+                        style={{ marginTop: 10 }}
                         onPress={() => SendExamHandler(0)}>
                         <View style={[pageStyle.buttonNB]}>
                           <Text
@@ -471,7 +458,7 @@ const testScreen = ({navigation, route}) => {
                       <View />
                     ) : (
                       <TouchableOpacity
-                        style={{marginTop: 10}}
+                        style={{ marginTop: 10 }}
                         onPress={() => setcurrentQuestion(currentQuestion - 1)}>
                         <View style={[pageStyle.buttonNB]}>
                           <FontAwesome5Icon
@@ -492,7 +479,7 @@ const testScreen = ({navigation, route}) => {
 
                     {currentQuestion === questionDetails.length - 1 ? (
                       <TouchableOpacity
-                        style={{marginTop: 10}}
+                        style={{ marginTop: 10 }}
                         onPress={() => SendExamHandler(0)}>
                         <View style={[pageStyle.buttonNB]}>
                           <Text
@@ -506,7 +493,7 @@ const testScreen = ({navigation, route}) => {
                       </TouchableOpacity>
                     ) : (
                       <TouchableOpacity
-                        style={{marginTop: 10}}
+                        style={{ marginTop: 10 }}
                         onPress={() => setcurrentQuestion(currentQuestion + 1)}>
                         <View style={[pageStyle.buttonNB]}>
                           <Text
@@ -531,11 +518,11 @@ const testScreen = ({navigation, route}) => {
           </View>
         </View>
         <Modal isVisible={isConfirmExamVisible}>
-          <View style={{flex: 1, justifyContent: 'center'}}>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
             <View
               style={[
                 styles.boxOvertime,
-                {backgroundColor: '#fff', borderRadius: 15},
+                { backgroundColor: '#fff', borderRadius: 15 },
               ]}>
               <Text
                 style={[
@@ -548,7 +535,7 @@ const testScreen = ({navigation, route}) => {
               <Text
                 style={[
                   styles.textLight18,
-                  {marginTop: 10, padding: 10, textAlign: 'center'},
+                  { marginTop: 10, padding: 10, textAlign: 'center' },
                 ]}>
                 ยืนยันการส่งคำตอบใช่หรือไม่ ?
               </Text>
@@ -559,14 +546,14 @@ const testScreen = ({navigation, route}) => {
                   padding: 10,
                 }}>
                 <TouchableOpacity
-                  style={{alignItems: 'center'}}
+                  style={{ alignItems: 'center' }}
                   onPress={() => setConfirmExamVisible(false)}>
                   <Text style={[styles.textLight18, pageStyle.confirmLeft]}>
                     ไม่ใช่
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{alignItems: 'center'}}
+                  style={{ alignItems: 'center' }}
                   onPress={() => {
                     SendExamHandler(2);
                     setshowOvertimePlus(false);
@@ -581,11 +568,11 @@ const testScreen = ({navigation, route}) => {
           </View>
         </Modal>
         <Modal isVisible={isModalVisible}>
-          <View style={{flex: 1, justifyContent: 'center'}}>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
             <View
               style={[
                 styles.boxOvertime,
-                {backgroundColor: '#fff', borderRadius: 15},
+                { backgroundColor: '#fff', borderRadius: 15 },
               ]}>
               <Text
                 style={[
@@ -598,7 +585,7 @@ const testScreen = ({navigation, route}) => {
               <Text
                 style={[
                   styles.textLight18,
-                  {marginTop: 10, padding: 10, textAlign: 'center'},
+                  { marginTop: 10, padding: 10, textAlign: 'center' },
                 ]}>
                 ต้องการทำต่อหรือไม่ ?
               </Text>
@@ -609,7 +596,7 @@ const testScreen = ({navigation, route}) => {
                   padding: 10,
                 }}>
                 <TouchableOpacity
-                  style={{alignItems: 'center'}}
+                  style={{ alignItems: 'center' }}
                   onPress={() => {
                     SendExamHandler(1);
                     setModalVisible(false);
@@ -619,7 +606,7 @@ const testScreen = ({navigation, route}) => {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{alignItems: 'center'}}
+                  style={{ alignItems: 'center' }}
                   onPress={() => {
                     setshowOvertimePlus(true);
                     setModalVisible(false);
@@ -633,11 +620,11 @@ const testScreen = ({navigation, route}) => {
           </View>
         </Modal>
         <Modal isVisible={isIncompleteVisible}>
-          <View style={{flex: 1, justifyContent: 'center'}}>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
             <View
               style={[
                 styles.boxOvertime,
-                {backgroundColor: '#fff', borderRadius: 15},
+                { backgroundColor: '#fff', borderRadius: 15 },
               ]}>
               <Text
                 style={[
@@ -650,12 +637,12 @@ const testScreen = ({navigation, route}) => {
               <Text
                 style={[
                   styles.textLight18,
-                  {marginTop: 10, padding: 10, textAlign: 'center'},
+                  { marginTop: 10, padding: 10, textAlign: 'center' },
                 ]}>
                 คุณยังเลือกคำตอบไม่ครบ
               </Text>
               <TouchableOpacity
-                style={{alignItems: 'center', padding: 10}}
+                style={{ alignItems: 'center', padding: 10 }}
                 onPress={() => {
                   setIncompleteVisible(false);
                   warpExam();

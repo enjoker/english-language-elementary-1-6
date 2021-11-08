@@ -18,15 +18,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import Modal from 'react-native-modal';
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ImageModal from 'react-native-image-modal';
 // import Icon Advert
 import AdvertIcon from '../assets/images/icons/Vector.svg';
 // import Ads
 import BannerAds from '../components/bannerAds';
 import { useRewardedAd } from '@react-native-admob/admob';
+import { testRewardId, productionRewardId } from '../utilities/admob';
+
 // import Actions
 import * as scoreActions from '../store/actions/score';
 import * as userActions from '../store/actions/user';
-import userReducer from '../store/reducers/user';
 
 const hookOptions = {
   loadOnDismissed: true,
@@ -68,11 +70,8 @@ const scoreScreen = ({ navigation, route }) => {
   const [scoreLevel, setscoreLevel] = useState(0);
   const [sumScore, setsumScore] = useState(0);
   const [usePrivilegeStatus, setUsePrivilegeStatus] = useState(false)
-  const { adLoadError, adLoaded, reward, show } = useRewardedAd(
-    'ca-app-pub-3940256099942544/5224354917',
-    hookOptions,
-  );
-  
+  const { adLoadError, adLoaded, reward, show } = useRewardedAd(testRewardId, hookOptions);
+
   const savePrivilege = async () => {
     dispatch(userActions.addPrivilege());
   };
@@ -256,6 +255,23 @@ const scoreScreen = ({ navigation, route }) => {
             ]}>
             คำถาม: {allQuestions[selectedQuestion.index].examQuestion}
           </Text>
+          {!answerResult && allQuestions[selectedQuestion.index].examPicAnswer !==
+            null &&
+            allQuestions[selectedQuestion.index].examPicAnswer !==
+            '' ? (
+            <View style={{ marginVertical: 5 }}>
+              <ImageModal              
+                modalImageResizeMode='contain'              
+                imageBackgroundColor="#ffffff"
+                style={{ width: 100, height: 100 }}
+                source={{
+                  uri:
+                    'https://api.test.schoolcare.app/getImg/getUploadFile?name=' +
+                    allQuestions[selectedQuestion.index].examPicAnswer.substr(8),
+                }}
+              />
+            </View>
+          ) : null}
           <View style={{ flexDirection: 'row', marginVertical: 10 }}>
             <Text
               style={[
@@ -378,22 +394,22 @@ const scoreScreen = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>        
+        </View>
       </View>
     );
   };
   const AdvertModal2 = () => {
     return (
-      <View style={{ flex: 1, justifyContent: 'center' }}>        
-         <View
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <View
           style={[
             styles.boxOvertime,
-            {backgroundColor: '#D84315', borderRadius: 15},
+            { backgroundColor: '#D84315', borderRadius: 15 },
           ]}>
           <Text
             style={[
               styles.textLight22,
-              {marginTop: 10, padding: 10, textAlign: 'center',color:'#FFFFFF'},
+              { marginTop: 10, padding: 10, textAlign: 'center', color: '#FFFFFF' },
             ]}>
             สิทธิ์ในการดูเฉลยของท่านเหลือ 0
           </Text>
@@ -402,10 +418,10 @@ const scoreScreen = ({ navigation, route }) => {
               flexDirection: 'row',
               justifyContent: 'space-around',
               padding: 10,
-              marginBottom:10
+              marginBottom: 10
             }}>
             <TouchableOpacity
-              style={{alignItems: 'center'}}
+              style={{ alignItems: 'center' }}
               onPress={() => {
                 setprivilegeVisible2(false);
               }}>
@@ -415,13 +431,13 @@ const scoreScreen = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={{ alignItems: 'center' }}
-              onPress={() => { show(); setprivilegeVisible2(false); }}>
+              onPress={() => show()}>
               <Text style={[styles.textLight18, pageStyle.overTimeRight]}>
                 กดดูโฆษณาเพื่อรับ 2 สิทธิ์
               </Text>
             </TouchableOpacity>
           </View>
-        </View>        
+        </View>
       </View>
     );
   };
@@ -842,8 +858,6 @@ const scoreScreen = ({ navigation, route }) => {
                         flex: 1,
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        marginBottom: 10,
-                        marginTop: 10,
                       }}>
                       <TouchableOpacity
                         style={{ alignItems: 'center' }}
@@ -879,8 +893,8 @@ const scoreScreen = ({ navigation, route }) => {
                       style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        marginBottom: 10,
-                        marginTop: 10,
+                        marginBottom: 40,
+                        marginTop: 20,
                       }}>
                       <TouchableOpacity
                         style={{ alignItems: 'center' }}
