@@ -371,7 +371,6 @@ const testScreen = ({ navigation, route }) => {
                             {questionDetails[currentQuestion].examChoice.map(
                               (item, index) => {
                                 const choiceValue = findChoice(item);
-                                console.log(questionDetails);
                                 return (
                                   <View style={pageStyle.radioZone} key={index}>
                                     <RadioButton

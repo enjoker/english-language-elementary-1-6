@@ -45,8 +45,8 @@ export const getPrivilege = () => {
 export const newPrivilege = () => {
    return async (dispatch, getState) => {
       try {
-         await AsyncStorage.setItem('privilege', '3')
-         dispatch({ type: USER_PRIVILEGE, userPrivilege: 3 });
+         await AsyncStorage.setItem('privilege', '2')
+         dispatch({ type: USER_PRIVILEGE, userPrivilege: 2 });
       } catch (error) {
          console.log(error)
       }

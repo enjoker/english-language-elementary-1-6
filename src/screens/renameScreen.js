@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, ImageBackground } from 'react-native';
-import { useSelector } from 'react-redux';
+import { View, Text, SafeAreaView, ImageBackground } from 'react-native';
 import styles from '../styles/style';
 import { Input, Button } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import Ads
+
+// import Ads
 import BannerAds from '../components/bannerAds';
 
 const renameScreen = ({ navigation }) => {
@@ -31,7 +31,7 @@ const renameScreen = ({ navigation }) => {
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
          <ImageBackground
             style={{ flex: 1, paddingHorizontal: 15 }}
-            source={require('../assets/images/Bg-one.png')}>
+            source={require('../assets/images/bg.jpg')}>
             <View style={{ paddingVertical: 30, alignItems: 'center' }}>
                <Text style={[styles.textBold22, { color: '#fff' }]}>เปลี่ยนชื่อ</Text>
             </View>

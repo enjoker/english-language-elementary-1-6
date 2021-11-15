@@ -19,18 +19,28 @@ import Modal from 'react-native-modal';
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageModal from 'react-native-image-modal';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+// import Components
+import Loading from '../components/loading';
+
 // import Icon Advert
 import AdvertIcon from '../assets/images/icons/Vector.svg';
+
 // import Ads
 import BannerAds from '../components/bannerAds';
 import { useRewardedAd } from '@react-native-admob/admob';
-import { testRewardId, productionRewardId } from '../utilities/admob';
+import { AdmobRewardId, adsWaitingTime } from '../utilities/functions';
 
 // import Actions
 import * as scoreActions from '../store/actions/score';
 import * as userActions from '../store/actions/user';
 
+dayjs.extend(utc)
+
 const hookOptions = {
+  loadOnMounted: false,
   loadOnDismissed: true,
   requestOptions: {
     requestNonPersonalizedAdsOnly: true,
@@ -70,10 +80,17 @@ const scoreScreen = ({ navigation, route }) => {
   const [scoreLevel, setscoreLevel] = useState(0);
   const [sumScore, setsumScore] = useState(0);
   const [usePrivilegeStatus, setUsePrivilegeStatus] = useState(false)
-  const { adLoadError, adLoaded, reward, show } = useRewardedAd(testRewardId, hookOptions);
+  const { adLoadError, adLoaded, reward, show, load } = useRewardedAd(AdmobRewardId, hookOptions);
+
+  // Ads Time
+  const [adsTimeStamp, setadsTimeStamp] = useState()
+  const [adsTime, setAdsTime] = useState(0)
 
   const savePrivilege = async () => {
+    const dateNow = dayjs.utc().local().format();
+    await AsyncStorage.setItem('adsTime', dateNow.toString());
     dispatch(userActions.addPrivilege());
+    setprivilegeVisible2(false)
   };
 
   const usePrivilege = async () => {
@@ -82,6 +99,23 @@ const scoreScreen = ({ navigation, route }) => {
       setUsePrivilegeStatus(true)
     }
   };
+
+  const checkAdsTime = async () => {
+    try {
+      const adsDateTime = await AsyncStorage.getItem('adsTime');
+      setadsTimeStamp(adsDateTime)
+    } catch (error) {
+      console.log('Not have Ads Timestamp')
+    }
+  }
+
+  const showRewardAds = () => {
+    if (!adLoaded) {
+      console.log('Ads loading')
+      load()
+    }
+    setprivilegeVisible(true)
+  }
 
   useEffect(() => {
     if (adLoadError) {
@@ -93,7 +127,6 @@ const scoreScreen = ({ navigation, route }) => {
     if (reward) {
       console.log(`Reward Earned: ${reward.type}`);
       savePrivilege();
-      setprivilegeVisible(false)
     }
   }, [reward]);
 
@@ -112,12 +145,15 @@ const scoreScreen = ({ navigation, route }) => {
     : null;
 
   const toggleModal = (index, answerResult, status) => {
+    if (!adLoaded) {
+      console.log('Ads loading')
+      load()
+    }
     if (status == false) {
       if (privilege != '0') {
         setselectedQuestion({ index, answerResult });
         setmodalVisible(!ModalVisible);
         usePrivilege();
-        // setUsePrivilegeStatus(true);
       } else if (usePrivilegeStatus && privilege == 0) {
         setselectedQuestion({ index, answerResult });
         setmodalVisible(!ModalVisible);
@@ -128,18 +164,6 @@ const scoreScreen = ({ navigation, route }) => {
       setselectedQuestion({ index, answerResult });
       setmodalVisible(!ModalVisible);
     }
-    // if (privilege != '0') {
-    //   if (status == true) {
-    //     setselectedQuestion({ index, answerResult });
-    //     setmodalVisible(!ModalVisible);
-    //   } else {
-    //     setselectedQuestion({ index, answerResult });
-    //     setmodalVisible(!ModalVisible);
-    //     usePrivilege();
-    //   }
-    // } else {
-    //   setprivilegeVisible(!privilegeVisible)
-    // }
   };
 
   const sendScore = useCallback(() => {
@@ -162,15 +186,6 @@ const scoreScreen = ({ navigation, route }) => {
           1000,
         ) / 1000;
     }
-    /*if (timeLeft > 299) {
-      rankingScore += 1;
-    } else if (timeLeft === 0) {
-      if (correctAnswerCount === 0) {
-        rankingScore = 0;
-      } else {
-        rankingScore -= 1;
-      }
-    }*/
     if (!sendScoreStatus) {
       dispatch(
         scoreActions.sendScore(
@@ -188,7 +203,17 @@ const scoreScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     sendScore();
-  }, []);
+    checkAdsTime();
+  }, [privilege]);
+
+  useEffect(() => {
+    if (adsTimeStamp) {
+      const timeNow = dayjs.utc().local().format();
+      const findSecond = dayjs(timeNow) - dayjs(adsTimeStamp);
+      const timeSec = findSecond / 1000;
+      setAdsTime(timeSec)
+    }
+  }, [adsTimeStamp, privilegeVisible, privilegeVisible2])
 
   useEffect(() => {
     if (correctAnswerCount != 0 || wrongAnswerCount != 0) {
@@ -242,12 +267,7 @@ const scoreScreen = ({ navigation, route }) => {
     return (
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <View
-          style={[
-            styles.boxETC,
-            answerResult
-              ? { backgroundColor: '#63EF71' }
-              : { backgroundColor: '#FFD84E' },
-          ]}>
+          style={[styles.boxETC, { borderBottomWidth: 1, backgroundColor: answerResult ? '#63EF71' : '#fbffc0' }]}>
           <Text
             style={[
               styles.textMedium18,
@@ -260,8 +280,8 @@ const scoreScreen = ({ navigation, route }) => {
             allQuestions[selectedQuestion.index].examPicAnswer !==
             '' ? (
             <View style={{ marginVertical: 5 }}>
-              <ImageModal              
-                modalImageResizeMode='contain'              
+              <ImageModal
+                modalImageResizeMode='contain'
                 imageBackgroundColor="#ffffff"
                 style={{ width: 100, height: 100 }}
                 source={{
@@ -296,7 +316,7 @@ const scoreScreen = ({ navigation, route }) => {
                 style={[
                   styles.textMedium18,
                   pageStyle.correctAnswer,
-                  { textDecorationLine: 'underline' },
+                  { textDecorationLine: 'underline', color: '#079805' },
                 ]}>
                 คำตอบที่ถูก
               </Text>
@@ -304,7 +324,7 @@ const scoreScreen = ({ navigation, route }) => {
                 style={[
                   styles.textMedium18,
                   pageStyle.correctAnswer,
-                  { flexWrap: 'wrap', flex: 1 },
+                  { flexWrap: 'wrap', flex: 1, color: '#079805' },
                 ]}>
                 {allQuestions[answerIndex].examAnswer[0].c1}
               </Text>
@@ -330,18 +350,9 @@ const scoreScreen = ({ navigation, route }) => {
         <View
           style={[
             styles.boxOvertime,
-            { backgroundColor: '#1FA246', borderRadius: 15 },
+            { backgroundColor: '#1FA246', borderRadius: 15, borderBottomWidth: 1 },
           ]}>
-          <Text
-            style={[
-              styles.textLight22,
-              {
-                marginTop: 10,
-
-                textAlign: 'center',
-                color: '#FFFFFF',
-              },
-            ]}>
+          <Text style={[styles.textLight22, { marginTop: 10, textAlign: 'center', color: '#FFFFFF' }]}>
             ท่านมีสิทธื์ในการดูเฉลยจำนวน
           </Text>
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -387,10 +398,19 @@ const scoreScreen = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={adsTime > adsWaitingTime || !adsTimeStamp ? false : true}
               style={{ alignItems: 'center' }}
               onPress={() => show()}>
-              <Text style={[styles.textLight18, pageStyle.overTimeRight]}>
-                กดดูโฆษณาเพื่อรับสิทธิ์เพิ่ม
+              <Text style={[
+                styles.textLight18,
+                pageStyle.overTimeRight,
+                adsTime > adsWaitingTime || !adsTimeStamp ? { backgroundColor: '#D7B641' } : { backgroundColor: '#999999', borderWidth: 0 }
+              ]}>
+                {
+                  adsTime > adsWaitingTime || !adsTimeStamp ?
+                    'ดูโฆษณาเพื่อรับสิทธิ์เพิ่ม'
+                    : 'ดูโฆษณาได้ใน ' + (adsWaitingTime - adsTime) + ' วิ'
+                }
               </Text>
             </TouchableOpacity>
           </View>
@@ -404,7 +424,7 @@ const scoreScreen = ({ navigation, route }) => {
         <View
           style={[
             styles.boxOvertime,
-            { backgroundColor: '#D84315', borderRadius: 15 },
+            { backgroundColor: '#D84315', borderRadius: 15, borderBottomWidth: 1 },
           ]}>
           <Text
             style={[
@@ -430,10 +450,19 @@ const scoreScreen = ({ navigation, route }) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={adsTime > adsWaitingTime || !adsTimeStamp ? false : true}
               style={{ alignItems: 'center' }}
               onPress={() => show()}>
-              <Text style={[styles.textLight18, pageStyle.overTimeRight]}>
-                กดดูโฆษณาเพื่อรับ 2 สิทธิ์
+              <Text style={[
+                styles.textLight18,
+                pageStyle.overTimeRight,
+                adsTime > adsWaitingTime || !adsTimeStamp ? { backgroundColor: '#D7B641' } : { backgroundColor: '#999999', borderWidth: 0 }
+              ]}>
+                {
+                  adsTime > adsWaitingTime || !adsTimeStamp ?
+                    'กดดูโฆษณาเพื่อรับ 2 สิทธิ์'
+                    : 'ดูโฆษณาได้ใน ' + (adsWaitingTime - adsTime) + ' วิ'
+                }
               </Text>
             </TouchableOpacity>
           </View>
@@ -511,18 +540,7 @@ const scoreScreen = ({ navigation, route }) => {
                       </Text>
                       <Text
                         style={[
-                          styles.textBold16,
-                          {
-                            paddingVertical: 5,
-                            paddingHorizontal: 15,
-                            marginHorizontal: 5,
-                            textAlign: 'center',
-                            borderWidth: 1,
-                            borderRadius: 10,
-                            borderColor: '#000000',
-                            backgroundColor: '#FFD84E',
-                          },
-                        ]}>
+                          styles.textBold16, pageStyle.textLevel]}>
                         {showLevel
                           ? level === 1
                             ? 'ง่าย'
@@ -535,37 +553,20 @@ const scoreScreen = ({ navigation, route }) => {
                       </Text>
                     </View>
                   </View>
-                  <View
-                    style={{
-                      marginTop: 5,
-                      justifyContent: 'space-between',
-                      flexDirection: 'row',
-                    }}>
+                  <View style={{ marginTop: 5, justifyContent: 'space-between', flexDirection: 'row' }}>
                     <View style={{ flexDirection: 'row' }}>
-                      <Text
-                        style={[
-                          styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
-                        ]}>
+                      <Text style={[styles.textBold16, { textAlignVertical: 'center', color: '#FFFFFF' }]}>
                         ทำถูก
                       </Text>
                       <Text style={[styles.textBold16, pageStyle.yellowBox]}>
                         {correctAnswerCount}
                       </Text>
-                      <Text
-                        style={[
-                          styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
-                        ]}>
+                      <Text style={[styles.textBold16, { textAlignVertical: 'center', color: '#FFFFFF' }]}>
                         ข้อ
                       </Text>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
-                      <Text
-                        style={[
-                          styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
-                        ]}>
+                      <Text style={[styles.textBold16, { textAlignVertical: 'center', color: '#FFFFFF' }]}>
                         เหลือเวลา
                       </Text>
                       <Text style={[styles.textBold16, pageStyle.yellowBox]}>
@@ -573,11 +574,7 @@ const scoreScreen = ({ navigation, route }) => {
                           '.' +
                           new Date(timeLeft * 1000).toISOString().substr(17, 2)}
                       </Text>
-                      <Text
-                        style={[
-                          styles.textBold16,
-                          { textAlignVertical: 'center', color: '#FFFFFF' },
-                        ]}>
+                      <Text style={[styles.textBold16, { textAlignVertical: 'center', color: '#FFFFFF' }]}>
                         นาที
                       </Text>
                     </View>
@@ -729,15 +726,7 @@ const scoreScreen = ({ navigation, route }) => {
                       </View>
                     </View>
                   ) : (
-                    <View
-                      style={{
-                        paddingHorizontal: 15,
-                        marginTop: 10,
-                        borderWidth: 2,
-                        borderRadius: 10,
-                        backgroundColor: '#fff',
-                        flex: 1,
-                      }}>
+                    <View style={pageStyle.bottomPageSection}>
                       <ScrollView
                         style={{ paddingVertical: 15 }}
                         showsVerticalScrollIndicator={false}>
@@ -837,30 +826,17 @@ const scoreScreen = ({ navigation, route }) => {
                     </Text>
                   </View>
                   <TouchableOpacity
-                    style={{
-                      marginTop: 10,
-                      padding: 8,
-                      flexDirection: 'row',
-                      flex: 1,
-                      justifyContent: 'center',
-                      backgroundColor: '#37565b',
-                      borderRadius: 10,
-                    }}
-                    onPress={() => setprivilegeVisible(!privilegeVisible)}>
+                    style={pageStyle.seePrivilegeBtn}
+                    onPress={() => showRewardAds()}>
                     <AdvertIcon width={26} height={26} />
                     <Text style={[styles.textLight18, { textAlignVertical: 'center', marginLeft: 10, color: '#ffffff' }]}>
                       ดูโฆษณาเพื่อรับสิทธิ์ดูเฉลย
                     </Text>
                   </TouchableOpacity>
                   {showDetailScore ? (
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                      }}>
+                    <View style={pageStyle.BtnSection}>
                       <TouchableOpacity
-                        style={{ alignItems: 'center' }}
+                        style={pageStyle.rankingBtn}
                         onPress={() =>
                           navigation.navigate('ranking', {
                             csgId: csgId,
@@ -869,56 +845,23 @@ const scoreScreen = ({ navigation, route }) => {
                             gradeName: gradeName,
                           })
                         }>
-                        <Text
-                          style={[
-                            styles.textBold16,
-                            {
-                              textAlignVertical: 'center',
-                              textAlign: 'center',
-                              padding: 10,
-                              borderRadius: 15,
-                              borderWidth: 1,
-                              width: 155,
-                              borderColor: '#FF834E',
-                              backgroundColor: '#FF56BB99',
-                              color: '#fff',
-                            },
-                          ]}>
+                        <Text style={[styles.textBold16, pageStyle.textRankingBtn]}>
                           ดูอันดับ
                         </Text>
                       </TouchableOpacity>
                     </View>
                   ) : (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginBottom: 40,
-                        marginTop: 20,
-                      }}>
+                    <View style={pageStyle.BtnSection}>
                       <TouchableOpacity
-                        style={{ alignItems: 'center' }}
+                        style={pageStyle.rankingBtn}
                         onPress={() => setshowDetailScore(true)}>
-                        <Text
-                          style={[
-                            styles.textBold16,
-                            {
-                              textAlignVertical: 'center',
-                              textAlign: 'center',
-                              padding: 10,
-                              borderRadius: 15,
-                              borderWidth: 1,
-                              width: 155,
-                              borderColor: '#FF834E',
-                              backgroundColor: '#FF56BB99',
-                              color: '#fff',
-                            },
-                          ]}>
+                        <Text style={[styles.textBold16, pageStyle.textRankingBtn]}>
                           ดูอันดับ
                         </Text>
                       </TouchableOpacity>
+                      <View style={{ width: 15 }} />
                       <TouchableOpacity
-                        style={{ alignItems: 'center' }}
+                        style={pageStyle.tryAgain}
                         onPress={() =>
                           navigation.dispatch(
                             CommonActions.reset({
@@ -937,21 +880,7 @@ const scoreScreen = ({ navigation, route }) => {
                             }),
                           )
                         }>
-                        <Text
-                          style={[
-                            styles.textBold16,
-                            {
-                              textAlignVertical: 'center',
-                              textAlign: 'center',
-                              padding: 10,
-                              borderRadius: 15,
-                              borderWidth: 1,
-                              width: 155,
-                              borderColor: '#FF4EB8',
-                              backgroundColor: '#F9FE07BF',
-                              color: '#0036F3',
-                            },
-                          ]}>
+                        <Text style={[styles.textBold16, pageStyle.textTryAgain]}>
                           ทำอีกครั้ง
                         </Text>
                       </TouchableOpacity>
@@ -961,12 +890,13 @@ const scoreScreen = ({ navigation, route }) => {
                 <Modal isVisible={ModalVisible}>
                   <AnswerModal />
                 </Modal>
-                <Modal isVisible={privilegeVisible}>
+                <Modal isVisible={privilegeVisible && adLoaded}>
                   <AdvertModal />
                 </Modal>
-                <Modal isVisible={privilegeVisible2}>
+                <Modal isVisible={privilegeVisible2 && adLoaded}>
                   <AdvertModal2 />
                 </Modal>
+                <Loading isModalVisible={privilegeVisible && !adLoaded || privilegeVisible2 && !adLoaded} />
                 {/* <Modal isVisible={isWrongModalVisible}>
                 <WrongModel />
               </Modal> */}
@@ -1020,8 +950,8 @@ const pageStyle = StyleSheet.create({
     color: '#D7B641',
     borderRadius: 10,
     borderWidth: 1,
-    padding: 10,
-    width: 100,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     textAlignVertical: 'center',
     textAlign: 'center',
   },
@@ -1036,6 +966,68 @@ const pageStyle = StyleSheet.create({
     textAlignVertical: 'center',
     textAlign: 'center',
   },
+  tryAgain: {
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#FF4EB8',
+    backgroundColor: '#F9FE07BF',
+    borderRadius: 15,
+    flex: 1
+  },
+  textTryAgain: {
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    padding: 10,
+    color: '#0036F3'
+  },
+  rankingBtn: {
+    alignItems: 'center',
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#FF834E',
+    backgroundColor: '#FF56BB99',
+    flex: 1
+  },
+  textRankingBtn: {
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    padding: 10,
+    color: '#fff'
+  },
+  BtnSection: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 40,
+    marginTop: 10,
+    flex: 1,
+  },
+  seePrivilegeBtn: {
+    marginTop: 10,
+    padding: 8,
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: '#37565b',
+    borderRadius: 10,
+  },
+  bottomPageSection: {
+    paddingHorizontal: 15,
+    marginTop: 10,
+    borderWidth: 2,
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    flex: 1,
+  },
+  textLevel: {
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    marginHorizontal: 5,
+    textAlign: 'center',
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#000000',
+    backgroundColor: '#FFD84E'
+  }
 });
 
 export default scoreScreen;
