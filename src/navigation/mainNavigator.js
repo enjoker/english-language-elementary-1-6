@@ -29,6 +29,7 @@ import testScreen from '../screens/testScreen';
 import scoreScreen from '../screens/scoreScreen';
 import rankingScreen from '../screens/rankingScreen';
 import advertScreen from '../screens/advertScreen';
+import AllAppScreen from '../screens/allAppScreen';
 
 // import {useRewardedAd} from '@react-native-admob/admob';
 
@@ -168,6 +169,11 @@ const Navigator = () => {
               name="rename"
               component={renameScreen}
               options={screenOptions}
+            />
+            <Stack.Screen
+              name="AllApp"
+              component={AllAppScreen}
+              options={{title: "ดาวน์โหลดวิชาอื่น ๆ"}}
             />
           </>
         ) : (
