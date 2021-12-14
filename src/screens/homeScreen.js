@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Alert,
-  StyleSheet,
+  StyleSheet
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from '../styles/style';
@@ -77,6 +77,16 @@ const homeScreen = ({ navigation }) => {
   useEffect(() => {
     if (adLoadError) {
       console.error(adLoadError);
+      Alert.alert(
+        "แจ้งเตือน",
+        "ไม่สามารถโหลดโฆษณาได้ในขณะนี้",
+        [
+          {
+            text: "ตกลง",
+            onPress: () => setprivilegeVisible(false),
+          },
+        ]
+      )
     }
   }, [adLoadError]);
 

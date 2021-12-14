@@ -31,15 +31,6 @@ import rankingScreen from '../screens/rankingScreen';
 import advertScreen from '../screens/advertScreen';
 import AllAppScreen from '../screens/allAppScreen';
 
-// import {useRewardedAd} from '@react-native-admob/admob';
-
-const hookOptions = {
-  loadOnDismissed: true,
-  requestOptions: {
-    requestNonPersonalizedAdsOnly: true,
-  },
-};
-
 const Navigator = () => {
   const dispatch = useDispatch();
   const checkUser = useSelector(state => state.user.userName);

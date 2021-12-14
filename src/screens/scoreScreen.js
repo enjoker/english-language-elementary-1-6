@@ -8,6 +8,7 @@ import {
   ScrollView,
   Dimensions,
   StyleSheet,
+  Alert
 } from 'react-native';
 import {
   heightPercentageToDP as hp,
@@ -120,6 +121,16 @@ const scoreScreen = ({ navigation, route }) => {
   useEffect(() => {
     if (adLoadError) {
       console.error(adLoadError);
+      Alert.alert(
+        "แจ้งเตือน",
+        "ไม่สามารถโหลดโฆษณาได้ในขณะนี้",
+        [
+          {
+            text: "ตกลง",
+            onPress: () => setprivilegeVisible(false),
+          },
+        ]
+      )
     }
   }, [adLoadError]);
 
@@ -244,6 +255,7 @@ const scoreScreen = ({ navigation, route }) => {
       setscoreLevel(1.2);
     }
   }, [level]);
+  
   useEffect(() => {
     if (correctAnswerCount >= (questionCount * 80) / 100 && overTimePlus == 0) {
       setsumScore(
@@ -269,8 +281,7 @@ const scoreScreen = ({ navigation, route }) => {
     const answerIndex = selectedQuestion.index;
     return (
       <View style={{ flex: 1, justifyContent: 'center' }}>
-        <View
-          style={[styles.boxETC, { borderBottomWidth: 1, backgroundColor: answerResult ? '#63EF71' : '#fbffc0' }]}>
+        <View style={[styles.boxETC, { borderBottomWidth: 1, backgroundColor: answerResult ? '#63EF71' : '#fbffc0' }]}>
           <Text
             style={[
               styles.textMedium18,
